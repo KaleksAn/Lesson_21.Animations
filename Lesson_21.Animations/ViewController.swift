@@ -20,8 +20,8 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        for (i, p) in view.subviews.enumerated() {
-            moveView(p, index: i)
+        for (index, object) in view.subviews.enumerated() {
+            moveView(object, index: index)
         }
     }
 

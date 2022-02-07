@@ -19,11 +19,15 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        animationSubViews()
+    }
+    
+    private func animationSubViews() {
         for (index, object) in view.subviews.enumerated() {
             moveView(object, index: index)
         }
     }
+    
 
     private func createViews(pieces count: Int) -> [UIView] {
         var collection = [UIView]()

@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         
         for number in 1...count {
             let newView = UIView(frame: CGRect(x: ViewDefaultValue.x, y: ViewDefaultValue.y * Double(number), width: ViewDefaultValue.width, height: ViewDefaultValue.height))
-            newView.backgroundColor = UIColor(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
+            newView.backgroundColor = self.randomColor()
             collection.append(newView)
             self.view.addSubview(newView)
         }
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
                        delay: 0,
                        options: getOptions(index)) {
             item.center = CGPoint(x: self.view.bounds.width - item.frame.width / 2, y: item.frame.origin.y + item.frame.height / 2)
-            item.backgroundColor = UIColor(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
+            item.backgroundColor = self.randomColor()
         } completion: { finished in
             
         }
@@ -66,6 +66,11 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    private func randomColor() -> UIColor {
+        return UIColor(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
+    }
+    
     
     
     private struct ViewDefaultValue {

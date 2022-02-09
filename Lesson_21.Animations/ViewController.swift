@@ -9,7 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var collectionViews = [UIView]()
+    var collectionViews = [UIView]() {
+        didSet {
+            for testView in collectionViews {
+                view.addSubview(testView)
+            }
+        }
+    }
+    
+    var cornersViews = [UIView]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +31,7 @@ class ViewController: UIViewController {
     }
     
     private func animationSubViews() {
-        for (index, object) in view.subviews.enumerated() {
+        for (index, object) in collectionViews.enumerated() {
             moveView(object, index: index)
         }
     }
@@ -32,11 +40,10 @@ class ViewController: UIViewController {
     private func createViews(pieces count: Int) -> [UIView] {
         var collection = [UIView]()
         
-        for number in 1...count {
-            let newView = UIView(frame: CGRect(x: ViewDefaultValue.x, y: ViewDefaultValue.y * Double(number), width: ViewDefaultValue.width, height: ViewDefaultValue.height))
+        for numberView in 1...count {
+            let newView = UIView(frame: CGRect(x: ViewDefaultValue.x, y: ViewDefaultValue.y + Double(numberView) * ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
             newView.backgroundColor = self.randomColor()
             collection.append(newView)
-            self.view.addSubview(newView)
         }
         
         return collection
@@ -73,6 +80,42 @@ class ViewController: UIViewController {
     
     private func randomColor() -> UIColor {
         return UIColor(red: CGFloat.random(in: 0.0...1.0), green: CGFloat.random(in: 0.0...1.0), blue: CGFloat.random(in: 0.0...1.0), alpha: 1.0)
+    }
+    
+    
+    private func makeCornersViews() {
+        for i in 1...4 {
+            
+        }
+    }
+    
+    private func getView(_ number: Int) -> UIView {
+        
+        switch number {
+            case 1:
+                let view = UIView(frame: CGRect(x: 0.0, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
+                view.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
+                return view
+            case 2:
+                let point = CGPoint(x: view.bounds.width - ViewDefaultValue.width, y: 0.0)
+                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
+                view.backgroundColor = #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1)
+                return view
+            case 3:
+                let point = CGPoint(x: 0.0, y: view.bounds.height - ViewDefaultValue.height)
+                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
+                view.backgroundColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
+                return view
+                
+            case 4:
+                let point = CGPoint(x: 0.0, y: view.bounds.height - ViewDefaultValue.height)
+                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
+                view.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
+                return view
+            default:
+                return UIView()
+        }
+    
     }
     
     

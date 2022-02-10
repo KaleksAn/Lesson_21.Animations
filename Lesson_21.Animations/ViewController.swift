@@ -11,23 +11,31 @@ class ViewController: UIViewController {
 
     var collectionViews = [UIView]() {
         didSet {
-            for testView in collectionViews {
-                view.addSubview(testView)
-            }
+            addElements(from: collectionViews)
         }
     }
     
-    var cornersViews = [UIView]()
+    var cornersViews = [UIView]() {
+        didSet {
+            addElements(from: cornersViews)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        collectionViews = createViews(pieces: 4)
+        createViews(pieces: 4)
+        makeCornersViews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animationSubViews()
+        
+        for (i, t) in cornersViews.shuffled().enumerated() {
+            viewFromCroner(t, for: i)
+        }
+        
     }
     
     private func animationSubViews() {
@@ -37,16 +45,12 @@ class ViewController: UIViewController {
     }
     
 
-    private func createViews(pieces count: Int) -> [UIView] {
-        var collection = [UIView]()
-        
+    private func createViews(pieces count: Int) {
         for numberView in 1...count {
             let newView = UIView(frame: CGRect(x: ViewDefaultValue.x, y: ViewDefaultValue.y + Double(numberView) * ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
             newView.backgroundColor = self.randomColor()
-            collection.append(newView)
+            collectionViews.append(newView)
         }
-        
-        return collection
     }
     
     
@@ -83,42 +87,48 @@ class ViewController: UIViewController {
     }
     
     
+    //MARK: - Views for corners
     private func makeCornersViews() {
-        for i in 1...4 {
-            
+        for i in 0...3 {
+             let (rect, color, _ ) = arrayWithValues[i]
+                let newView = UIView(frame: rect)
+                newView.backgroundColor = color
+                cornersViews.append(newView)
+    
         }
     }
     
-    private func getView(_ number: Int) -> UIView {
+    
+    
+   typealias myType = (CGRect, UIColor, Double)
+    
+    lazy var arrayWithValues = [(CGRect(x: 0.0, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1) , -Double.pi),
+                                    (CGRect(x: view.bounds.width - ViewDefaultValue.width, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1) , Double.pi),
+                                    (CGRect(x: view.bounds.width - ViewDefaultValue.width, y: view.bounds.height - ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1) , -Double.pi),
+                                    (CGRect(x: 0.0, y: view.bounds.height - ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1) , Double.pi) ]
+
+    
+    private func viewFromCroner(_ moveView: UIView, for index: Int) {
+        let (rect, color, pi) = arrayWithValues.shuffled()[index]
         
-        switch number {
-            case 1:
-                let view = UIView(frame: CGRect(x: 0.0, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
-                view.backgroundColor = #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)
-                return view
-            case 2:
-                let point = CGPoint(x: view.bounds.width - ViewDefaultValue.width, y: 0.0)
-                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
-                view.backgroundColor = #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1)
-                return view
-            case 3:
-                let point = CGPoint(x: 0.0, y: view.bounds.height - ViewDefaultValue.height)
-                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
-                view.backgroundColor = #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1)
-                return view
-                
-            case 4:
-                let point = CGPoint(x: 0.0, y: view.bounds.height - ViewDefaultValue.height)
-                let view = UIView(frame: CGRect(x: point.x, y: point.y, width: ViewDefaultValue.width, height: ViewDefaultValue.height))
-                view.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
-                return view
-            default:
-                return UIView()
+        UIView.animate(withDuration: 10,
+                       delay: 0,
+                       options: [.curveEaseInOut, .repeat, .autoreverse]) {
+            moveView.frame = rect
+            moveView.backgroundColor = color
+            moveView.transform = CGAffineTransform(rotationAngle: pi)
+        } completion: { finished in
+           
         }
-    
+
     }
     
     
+    private func addElements(from array: [UIView]) {
+        for element in array {
+            view.addSubview(element)
+        }
+    }
     
     private struct ViewDefaultValue {
         static let x = 0.0

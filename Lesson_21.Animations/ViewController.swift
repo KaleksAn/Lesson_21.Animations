@@ -32,8 +32,8 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         animationSubViews()
         
-        for (i, t) in cornersViews.shuffled().enumerated() {
-            viewFromCroner(t, for: i)
+        for (n, i) in cornersViews.enumerated() {
+            viewFromCroner(i, for: n)
         }
         
     }
@@ -62,10 +62,12 @@ class ViewController: UIViewController {
             item.center = CGPoint(x: self.view.bounds.width - item.frame.width / 2, y: item.frame.origin.y + item.frame.height / 2)
             item.backgroundColor = self.randomColor()
         } completion: { finished in
-            
+            print("FINISH")
         }
 
     }
+    
+   
     
     private func getOptions(_ number: Int) -> UIView.AnimationOptions {
         
@@ -102,23 +104,35 @@ class ViewController: UIViewController {
     
    typealias myType = (CGRect, UIColor, Double)
     
+    
+    
     lazy var arrayWithValues = [(CGRect(x: 0.0, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1) , -Double.pi),
                                     (CGRect(x: view.bounds.width - ViewDefaultValue.width, y: 0.0, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0.9994240403, green: 0.9855536819, blue: 0, alpha: 1) , Double.pi),
                                     (CGRect(x: view.bounds.width - ViewDefaultValue.width, y: view.bounds.height - ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0, green: 0.9768045545, blue: 0, alpha: 1) , -Double.pi),
                                     (CGRect(x: 0.0, y: view.bounds.height - ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1) , Double.pi) ]
 
     
-    private func viewFromCroner(_ moveView: UIView, for index: Int) {
-        let (rect, color, pi) = arrayWithValues.shuffled()[index]
+    func test(index number: Int) -> myType {
         
-        UIView.animate(withDuration: 10,
+        var num = number + 1
+        
+        if num >= arrayWithValues.count {
+            num = 0
+        }
+        
+        return arrayWithValues[num]
+    }
+    
+    private func viewFromCroner(_ moveView: UIView, for index: Int) {
+        let (rect, color, pi) = self.test(index: index)
+        UIView.animate(withDuration: 5,
                        delay: 0,
-                       options: [.curveEaseInOut, .repeat, .autoreverse]) {
+                       options: [.curveEaseInOut, .repeat]) {
             moveView.frame = rect
             moveView.backgroundColor = color
             moveView.transform = CGAffineTransform(rotationAngle: pi)
         } completion: { finished in
-           
+            //self.viewFromCroner(moveView, for: index)
         }
 
     }

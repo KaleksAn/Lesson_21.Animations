@@ -8,7 +8,9 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    var testView_02 = UIImageView()
+    
     var collectionViews = [UIView]() {
         didSet {
             addElements(from: collectionViews)
@@ -24,16 +26,33 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        let imageName = "1.png"
+        let image_01 = UIImage(named: imageName)
+        let imageView = UIImageView(image: image_01!)
+        imageView.frame = CGRect(x: 100, y: 100, width: 200, height: 300)
+        view.addSubview(imageView)
+        imageView.animationDuration = 6
+        imageView.startAnimating()
+        
+        let viewAnimated = UIImageView(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
+        viewAnimated.backgroundColor = .white
+        viewAnimated.animationDuration = 6
+        viewAnimated.startAnimating()
+        
+        
+        testView_02 = imageView
         createViews(pieces: 4)
         makeCornersViews()
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         animationSubViews()
         
-        for (n, i) in cornersViews.enumerated() {
-            viewFromCroner(i, for: n)
+        for (number, element) in cornersViews.enumerated() {
+            viewFromCroner(element, for: number)
         }
         
     }
@@ -112,27 +131,24 @@ class ViewController: UIViewController {
                                     (CGRect(x: 0.0, y: view.bounds.height - ViewDefaultValue.height, width: ViewDefaultValue.width, height: ViewDefaultValue.height), #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1) , Double.pi) ]
 
     
-    func test(index number: Int) -> myType {
-        
-        var num = number + 1
-        
-        if num >= arrayWithValues.count {
-            num = 0
-        }
-        
-        return arrayWithValues[num]
+    private func getRCP(_ number: inout Int) -> myType {
+        if number >= arrayWithValues.count { number = 0 }
+        return arrayWithValues[number]
     }
     
     private func viewFromCroner(_ moveView: UIView, for index: Int) {
-        let (rect, color, pi) = self.test(index: index)
+        var num = index + 1
+        let (rect, color, pi) = getRCP(&num)
+            
         UIView.animate(withDuration: 5,
                        delay: 0,
-                       options: [.curveEaseInOut, .repeat]) {
+                       options: .curveEaseInOut) {
             moveView.frame = rect
             moveView.backgroundColor = color
             moveView.transform = CGAffineTransform(rotationAngle: pi)
+            self.testView_02.center = CGPoint(x: Double.random(in: 0.0...820), y: Double.random(in: 0.0...1180))
         } completion: { finished in
-            //self.viewFromCroner(moveView, for: index)
+            self.viewFromCroner(moveView, for: num)
         }
 
     }
